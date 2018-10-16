@@ -1,18 +1,55 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>{{ headline }}</h1>
+
+    <div>
+      Task: <input v-model="newTask.text">
+      <button v-on:click="addTask()">Add Task</button>
+    </div>
+
+    <div v-for="task in tasks">
+      <h3>{{ task.text}}</h3>
+      <h3>Completed? {{ task.completed }}</h3>
+    </div>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'home',
-  components: {
-    HelloWorld
-  }
+<style>
+body {
+  background-color: gray;
 }
+</style>
+
+<script>
+export default {
+  data: function() {
+    return {
+      headline: "Your Daily Tasks",
+
+      tasks: [
+      { 
+      text: "Go to the gym",
+      completed: true
+      },
+      { 
+      text: "Walk the dog",
+      completed: false
+      },
+      {
+      text: "Take a bath",
+      completed: false
+      }
+    ],
+    newTask: {text: "", completed: false}
+    };
+  },
+  created: function() {},
+  methods: {
+    addTask: function() {
+      this.tasks.push(this.newTask);
+      this.newTask = {text: "", completed: false};
+    }
+  },
+  computed: {}
+};
 </script>
