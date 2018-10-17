@@ -29,29 +29,24 @@
 </style>
 
 <script>
+var axios = require('axios');
+
 export default {
   data: function() {
     return {
       headline: "Your Daily Tasks",
 
-      tasks: [
-      { 
-      text: "Go to the gym",
-      completed: false
-      },
-      { 
-      text: "Walk the dog",
-      completed: false
-      },
-      {
-      text: "Take a bath",
-      completed: false
-      }
-    ],
-    newTask: {text: "", completed: false}
+      tasks: [],
+      newTask: {text: "", completed: false}
     };
   },
-  created: function() {},
+  created: function() {
+    axios
+    .get("http://localhost:3000/api/tasks")
+    .then(function(response) {
+      this.tasks = response.data;
+    }.bind(this));
+  },
   methods: {
     addTask: function() {
       this.tasks.push(this.newTask);
