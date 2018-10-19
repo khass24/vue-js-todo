@@ -49,7 +49,16 @@ export default {
   },
   methods: {
     addTask: function() {
-      this.tasks.push(this.newTask);
+      var params = {
+                    text: this.newTask.text
+                    };
+
+      axios
+      .post("http://localhost:3000/api/tasks", params)
+      .then(function(response) {
+        this.tasks.push(response.data);
+      }.bind(this));
+
       this.newTask = {text: "", completed: false};
     },
     toggleComplete: function(inputTask) {
