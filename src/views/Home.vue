@@ -7,37 +7,55 @@
     </div>
 
     <div>
-      <input v-model="taskFilter">
+      Search: <input v-model="taskFilter" list="texts">
+      <datalist id="texts">
+        <option v-for="task in tasks">{{ task.text }}</option>
+      </datalist>
     </div>
 
-    <div v-for="task in filterBy(tasks, taskFilter, 'text')">
-      <h2 @click="toggleBio(task)">{{ task.text }}</h2>
-      <div v-if="task.completed">
-        <h3>{{ task.text }}</h3>
-        <button @click="deleteTask(task)">Delete</button>
-      </div>
+    <div>
+      <button @click="setSortAttribute('text')">Sort by Task</button>
     </div>
 
-
-    <!-- <div>
-      Task: <input v-model="newTask.text">
-      <button v-on:click="addTask()">Add Task</button>
+    <transition-group name="fade">
+    <div v-for="task in orderBy(filterBy(tasks, textFilter, 'text'), sortAttribute, sortOrder)" v-bind:key="task.text">
+      <h2>{{ task.text }}</h2>
     </div>
-
-    <div v-for="task in tasks">
-      <h3 @click="toggleComplete(task)" v-bind:class="{strike: task.completed}">{{ task.text}}</h3>
-    </div> -->
-  
-<!--       <button @click="deleteTasks()">Delete Completed Tasks!</button>
- --> </div>
+    </transition-group>
+  </div>
 </template>
 
 <style>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 10s
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0
+  }
 
-.strike {
-  text-decoration: line-through;
-}
+  /* Vue.js slide-right */
+  .slide-right-enter-active {
+    transition: all 1s ease;
+  }
+  .slide-right-leave-active {
+    transition: all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-right-enter, .slide-right-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+  }
 
+  /* Vue.js slide-left */
+  .slide-left-enter-active {
+    transition: all .3s ease;
+  }
+  .slide-left-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-left-enter, .slide-left-leave-to {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
 </style>
 
 <script>
@@ -50,7 +68,9 @@ export default {
 
       tasks: [],
       newTask: {text: "", completed: false},
-      taskFilter: ""
+      taskFilter: "",
+      sortAttribute: "text",
+      sortOrder: 1
     };
   },
   created: function() {
@@ -96,6 +116,14 @@ export default {
         }
       }
       this.tasks = incompleteTasks;
+    },
+    setSortAttribute: function(inputAttribute) {
+      if (this.sortAttribute === inputAttribute) {
+        this.sortOrder = this.sortOrder * -1;
+      } else {
+        this.sortOrder = 1;
+      }
+      this.sortAttribute = inputAttribute;
     }
   },
   computed: {}
