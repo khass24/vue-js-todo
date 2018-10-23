@@ -6,18 +6,30 @@
       <h4> Number of Tasks Remaining: {{ incompleteCounter() }}</h4>
     </div>
 
-
     <div>
+      <input v-model="taskFilter">
+    </div>
+
+    <div v-for="task in filterBy(tasks, taskFilter, 'text')">
+      <h2 @click="toggleBio(task)">{{ task.text }}</h2>
+      <div v-if="task.completed">
+        <h3>{{ task.text }}</h3>
+        <button @click="deleteTask(task)">Delete</button>
+      </div>
+    </div>
+
+
+    <!-- <div>
       Task: <input v-model="newTask.text">
       <button v-on:click="addTask()">Add Task</button>
     </div>
 
     <div v-for="task in tasks">
       <h3 @click="toggleComplete(task)" v-bind:class="{strike: task.completed}">{{ task.text}}</h3>
-    </div>
+    </div> -->
   
-      <button @click="deleteTasks()">Delete Completed Tasks!</button>
-  </div>
+<!--       <button @click="deleteTasks()">Delete Completed Tasks!</button>
+ --> </div>
 </template>
 
 <style>
@@ -37,7 +49,8 @@ export default {
       headline: "Your Daily Tasks",
 
       tasks: [],
-      newTask: {text: "", completed: false}
+      newTask: {text: "", completed: false},
+      taskFilter: ""
     };
   },
   created: function() {
